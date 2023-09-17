@@ -1,0 +1,22 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+body > * {
+    margin: 8px 0;
+}
+
+canvas {
+    height: 400px;
+    width: 400px;
+    border: 2px solid red;
+}
