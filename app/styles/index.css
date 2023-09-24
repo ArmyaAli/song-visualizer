@@ -17,6 +17,5 @@ body > * {
 
 canvas {
     height: 400px;
-    width: 400px;
-    border: 2px solid red;
+    width: 1200px; 
 }
