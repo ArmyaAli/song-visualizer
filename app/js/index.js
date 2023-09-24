@@ -1,3 +1,5 @@
+const WIDTH = 2000;
+const HEIGHT = 400;
 // Handle to our File upload element
 const input = document.querySelector("input");
 const canvas = document.querySelector("canvas");
@@ -11,14 +13,15 @@ let source = null;
 let gainNode = null;
 let distortionNode = null;
 
-analyser.fftSize = 2048;
+analyser.fftSize = 256;
+canvasContext.clearRect(0, 0, WIDTH, HEIGHT); // clear canvas
 // When there's a change in the input element, read the file
 const bufferLength = analyser.frequencyBinCount;
 const dataArray = new Uint8Array(bufferLength);
-console.log(dataArray.length)
 analyser.getByteTimeDomainData(dataArray);
 
 let playing = false;
+let muted = false;
 
 input?.addEventListener("change", (data) => {
     const blob = data.target.files[0];
@@ -31,20 +34,24 @@ input?.addEventListener("change", (data) => {
     source = audioContext.createMediaElementSource(audioElement)
     gainNode = audioContext.createGain();
 
-    // Source Node -> Analyser -> GainNode -> Destination (Speakers)
+    // Source Node -> AnalyserNode -> GainNode -> DestinationNode (Speakers / Hardware etc)
     source.connect(analyser)
         .connect(gainNode)
         .connect(audioContext.destination)
 });
 
 // Select our play button
-const playButton = document.querySelector("button");
+const playButton = document.getElementById("_playBtn");
+const muteButton = document.getElementById("_muteBtn");
+const volSlider = document.getElementById("_volSlider");
 
 playButton.addEventListener("click", async () => {
+    if (audioElement === null) return;
     if (!playing) {
         await audioElement.play();
         playing = true;
         playButton.innerText = "Resume"
+        loop();
     } else {
         audioElement.pause();
         playing = false;
@@ -52,36 +59,77 @@ playButton.addEventListener("click", async () => {
     }
 });
 
-const loop = () => {
-    canvasContext.clearRect(0, 0, 300, 300); // clear canvas
-    analyser.getByteTimeDomainData(dataArray);
-    const timestamp = audioContext.getOutputTimestamp();
-    console.log(timestamp)
-    canvasContext.fillStyle = "rgb(200, 200, 200)";
-    canvasContext.fillRect(0, 0, 400, 400);
-    canvasContext.lineWidth = 2;
-    canvasContext.strokeStyle = "rgb(0, 0, 0)";
-    canvasContext.beginPath();
-
-    const sliceWidth = 400 / bufferLength;
-    let x = 0;
-
-    for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = v * (200 / 3.0);
-
-        if (i === 0) {
-            canvasContext.moveTo(x, y);
-        } else {
-            canvasContext.lineTo(x, y);
-        }
-
-        x += sliceWidth;
+muteButton.addEventListener("click", async () => {
+    if (gainNode === null) {
+        console.error("No song uploaded.")
+        return;
     }
-    canvasContext.lineTo(400, 400 / 2);
-    canvasContext.stroke();
 
+    muted = !muted;
+
+    if (muted) {
+        muteButton.innerText = "unmute"
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+    } else {
+        muteButton.innerText = "mute"
+        gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+    }
+
+});
+
+volSlider.addEventListener("input", async (e) => {
+    if (gainNode === null) {
+        console.error("No song uploaded.")
+        return;
+    }
+
+    // 0 <= volume <= 100 -> 0 <= volume <= 1
+    const volume = e.target.value / 100;
+    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+});
+
+
+// FPS Control
+let stop = false;
+let frameCount = 0;
+let fps = 60;
+let fpsInterval;
+let startTime;
+let now;
+let then;
+let elapsed;
+
+// Init FPS Control 
+fpsInterval = 1000 / fps;
+then = Date.now();
+startTime = then;
+
+// Canvas loop
+const loop = () => {
+    // debugger;
+    if(!playing) return;
     window.requestAnimationFrame(loop);
-}
+    
+    now = Date.now();
+    elapsed = now - then;
+    
+    canvasContext.clearRect(0, 0, WIDTH, HEIGHT); // clear canvas
+    if (elapsed > fpsInterval) {
+        analyser.getByteFrequencyData(dataArray);
+        canvasContext.fillStyle = "rgb(0,0,0)";
+        canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
-loop();
+        const barWidth = (WIDTH / bufferLength) * 2.5;
+        let barHeight;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+            barHeight = dataArray[i] / 2;
+            console.log(barHeight)
+            canvasContext.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+            console.log(canvasContext.fillStyle);
+            canvasContext.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
+            x += barWidth + 1;
+        }
+    }
+}
