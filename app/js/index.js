@@ -1,8 +1,10 @@
-const WIDTH = 2000;
-const HEIGHT = 400;
 // Handle to our File upload element
 const input = document.querySelector("input");
 const canvas = document.querySelector("canvas");
+
+const HEIGHT = canvas.height;
+const WIDTH = canvas.width;
+
 const canvasContext = canvas.getContext("2d");
 
 const audioContext = new AudioContext();
@@ -101,23 +103,26 @@ let elapsed;
 
 // Init FPS Control 
 fpsInterval = 1000 / fps;
-then = Date.now();
+then = performance.now();
 startTime = then;
 
 // Canvas loop
 const loop = () => {
     // debugger;
-    if(!playing) return;
+    if (!playing) return;
     window.requestAnimationFrame(loop);
-    
-    now = Date.now();
+
+    now = performance.now();
     elapsed = now - then;
-    
-    canvasContext.clearRect(0, 0, WIDTH, HEIGHT); // clear canvas
+
     if (elapsed > fpsInterval) {
+        then = now - (elapsed % fpsInterval);
+        console.log("ALi")
+        canvasContext.clearRect(0, 0, WIDTH, HEIGHT); // clear canvas
         analyser.getByteFrequencyData(dataArray);
-        canvasContext.fillStyle = "rgb(0,0,0)";
+        canvasContext.fillStyle = `rgb(0,0,0)`;
         canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
+        canvasContext.fillStyle = `rgb(255,255,255)`;
 
         const barWidth = (WIDTH / bufferLength) * 2.5;
         let barHeight;
@@ -125,11 +130,12 @@ const loop = () => {
 
         for (let i = 0; i < bufferLength; i++) {
             barHeight = dataArray[i] / 2;
-            console.log(barHeight)
             canvasContext.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
-            console.log(canvasContext.fillStyle);
-            canvasContext.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
+            y = HEIGHT - barHeight / 2;
+            canvasContext.fillRect(x, y, barWidth, barHeight);
             x += barWidth + 1;
         }
+
+        frameCount += 1
     }
 }
