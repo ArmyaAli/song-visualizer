@@ -14,8 +14,3 @@ body {
 body > * {
     margin: 8px 0;
 }
-
-canvas {
-    height: 400px;
-    width: 1200px; 
-}
