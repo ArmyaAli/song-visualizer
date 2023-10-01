@@ -26,3 +26,7 @@ export const htmlInput = document.querySelector("input");
 export const playButton = document.getElementById("_playBtn");
 export const muteButton = document.getElementById("_muteBtn");
 export const volSlider = document.getElementById("_volSlider");
+
+export const visualisationDropdown = document.getElementById("_DDvisualisation");
+visualisationDropdown.appendChild(new Option("Bar", "_BAR"));
+visualisationDropdown.appendChild(new Option("Circle", "_CIRCLE"));
