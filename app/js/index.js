@@ -1,13 +1,8 @@
-import {canvasContext, audioGraph, canvasHeight, canvasWidth, audioState } from './state.js'
+import { canvasContext, audioGraph, canvasHeight, canvasWidth, audioState, visualisationDropdown, canvas } from './state.js'
 import './listeners.js'
 
-
+// TODO: refactor some of the below state variables
 canvasContext.clearRect(0, 0, canvasWidth, canvasHeight); // clear canvas
-// When there's a change in the input element, read the file
-
-
-let playing = false;
-let muted = false;
 
 // FPS Control
 let now;
@@ -18,20 +13,21 @@ let fps = 60;
 let fpsInterval = 1000 / fps;
 let then = performance.now();
 
-// Init FPS Control 
-let startTime = then;
-// Canvas loop
-export const loop = () => {
-    // debugger;
-    if (!audioState.audioPlaying) return;
-    window.requestAnimationFrame(loop);
+class VisualisationContext {
+    curr = "BAR"
+    constructor() {
+        visualisationDropdown.addEventListener('change', ($e) => {
+            let text = visualisationDropdown.selectedOptions[0]?.text;
+            this.curr = text?.toUpperCase();
+        })
+    }
 
-    now = performance.now();
-    elapsed = now - then;
+    exec() {
+        if (this.curr === "BAR") this.barExec();
+        if (this.curr === "CIRCLE") this.circleExec();
+    }
 
-    if (elapsed > fpsInterval) {
-        then = now - (elapsed % fpsInterval);
-        console.log("ALi")
+    barExec() {
         canvasContext.clearRect(0, 0, canvasWidth, canvasHeight); // clear canvas
         audioGraph.analyserNode.getByteFrequencyData(audioState.dataArray);
         canvasContext.fillStyle = `rgb(0,0,0)`;
@@ -52,4 +48,42 @@ export const loop = () => {
 
         frameCount += 1
     }
+
+    circleExec() {
+        canvasContext.clearRect(0, 0, canvasWidth, canvasHeight); // clear canvas
+        audioGraph.analyserNode.getByteFrequencyData(audioState.dataArray);
+        canvasContext.fillStyle = `rgb(0,0,0)`;
+        canvasContext.fillRect(0, 0, canvasWidth, canvasHeight);
+        canvasContext.fillStyle = `rgb(255,255,255)`;
+
+        let x = 0;
+        const r = 10;
+        for (let i = 0; i < audioState.bufferLength; i++) { 
+            let radius = audioState.dataArray[i];
+            canvasContext.beginPath();
+            canvasContext.fillStyle = `rgb(${radius + 100}, 50, 50)`;
+            canvasContext.ellipse(x, 100, radius, radius, 0, 0, 2 * Math.PI)
+            canvasContext.fill();
+            canvasContext.stroke();
+            x += 2*r + 1;
+        } 
+    
+    }
+}
+
+const vContext = new VisualisationContext();
+
+// Canvas loop
+export const loop = () => {
+    // debugger;
+    if (!audioState.audioPlaying) return;
+    window.requestAnimationFrame(loop);
+
+    now = performance.now();
+    elapsed = now - then;
+    
+    if (elapsed > fpsInterval){
+        then = now - (elapsed % fpsInterval);
+        vContext.exec();
+    } 
 }
