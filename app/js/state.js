@@ -1,8 +1,10 @@
+import { dispatchMap } from "./constants.js";
 // CANVAS
 export const canvas = document.querySelector("canvas");
 export const canvasContext = canvas.getContext("2d");
 export const canvasHeight = canvas.height;
 export const canvasWidth = canvas.width;
+canvasContext.clearRect(0, 0, canvasWidth, canvasHeight); // clear canvas
 
 // AUDIO
 export const audioContext = new AudioContext();
@@ -28,5 +30,15 @@ export const muteButton = document.getElementById("_muteBtn");
 export const volSlider = document.getElementById("_volSlider");
 
 export const visualisationDropdown = document.getElementById("_DDvisualisation");
-visualisationDropdown.appendChild(new Option("Bar", "_BAR"));
-visualisationDropdown.appendChild(new Option("Circle", "_CIRCLE"));
+// populate
+for(const opt of Object.keys(dispatchMap)) visualisationDropdown.appendChild(new Option(opt, `_${opt}`));
+
+export const Visualisation = { CURRENT_VISULIZATION:Object.keys(dispatchMap)[0] }
+
+export const m__FPS = {
+    count: 0,
+    elapsed: 0,
+    stop: false,
+    interval: 1000 / 60,
+    then: performance.now()
+}
