@@ -1,6 +1,7 @@
-import { htmlInput, playButton, muteButton, volSlider, audioContext, audioElement, audioGraph, audioState } from './state.js'
-import { loop } from './index.js'
+import { htmlInput, playButton, muteButton, volSlider, audioContext, audioElement, audioGraph, audioState, visualisationDropdown, Visualisation } from './state.js'
+import { loop } from './main.js'
 
+visualisationDropdown.addEventListener('change', () => Visualisation.CURRENT_VISULIZATION = visualisationDropdown.selectedOptions[0]?.text )
 htmlInput?.addEventListener("change", (data) => {
     const blob = data.target.files[0];
     const audioSrc = URL.createObjectURL(blob);
