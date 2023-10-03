@@ -1,0 +1,26 @@
+name: Deploy project 
+
+on:
+  push:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup & Build
+      env: 
+        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+      run: |
+        # setup private key
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SERVER_IP }} > ~/.ssh/known_hosts
+        echo "$PRIVATE_KEY" > ~/.ssh/id_rsa 
+
+        # deploy our code
+        rsync app/ github@$SERVER_IP:/var/www/html/ --delete
