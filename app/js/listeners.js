@@ -1,7 +1,20 @@
-import { htmlInput, playButton, muteButton, volSlider, audioContext, audioElement, audioGraph, audioState, visualisationDropdown, Visualisation } from './state.js'
+import { htmlInput, playButton, muteButton, volSlider, audioContext, audioElement, audioGraph, audioState, visualisationDropdown, Visualisation, canvas, ViewState } from './state.js'
 import { loop } from './main.js'
 
-visualisationDropdown.addEventListener('change', () => Visualisation.CURRENT_VISULIZATION = visualisationDropdown.selectedOptions[0]?.text )
+// GLOBAL
+window.addEventListener('resize', () => {
+    const view = document.getElementById("_content");
+    if (view.clientWidth <= 800) {
+        canvas.height = ViewState.canvasHeight = view.clientHeight / 2;
+        canvas.width = ViewState.canvasWidth = view.clientWidth - 8;
+        return;
+    }
+
+    canvas.width = ViewState.canvasWidth = view.clientWidth / 2;
+    canvas.height = ViewState.canvasHeight = view.clientHeight;
+});
+
+visualisationDropdown.addEventListener('change', () => Visualisation.CURRENT_VISULIZATION = visualisationDropdown.selectedOptions[0]?.text)
 htmlInput?.addEventListener("change", (data) => {
     const blob = data.target.files[0];
     const audioSrc = URL.createObjectURL(blob);
