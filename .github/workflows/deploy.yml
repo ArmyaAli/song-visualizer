@@ -23,4 +23,4 @@ jobs:
         echo "$PRIVATE_KEY" > ~/.ssh/id_rsa 
 
         # deploy our code
-        rsync app/ github@$SERVER_IP:/var/www/html/ --delete
+        rsync -r app/ github@$SERVER_IP:/var/www/html/ --delete
