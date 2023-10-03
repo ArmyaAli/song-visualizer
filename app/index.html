@@ -11,14 +11,29 @@
 </head>
 
 <body>
-    <canvas #canvas width="1200" height="400"></canvas>
-    <input type='file' name='file'>
-    <button id="_playBtn">Play</button>
-    <button id="_muteBtn">mute</button>
-    <input type="range" min="1" max="100" value="50" class="slider" id="_volSlider">
-    <label for="__DDVisualisation">Choose a visualsation:</label>
-    <select name="visualsation" id="_DDvisualisation">
-    </select>
+    <header>
+        <div>
+            <span id="_mainTitle">Audio Visualizer</span>
+            <span id="_mainSubtitle">By Ali Umar</span>
+        </div>
+    </header>
+    <div id="_content">
+        <div>
+            <canvas #canvas width="1200" height="400"></canvas>
+        </div>
+        <div id="_controls">
+            <input type='file' name='file'>
+            <div>
+                <button id="_playBtn">Play</button>
+                <button id="_muteBtn">Mute</button>
+            </div>
+            <input type="range" min="1" max="100" value="50" class="slider" id="_volSlider">
+            <label for="__DDVisualisation">Choose a visualsation:</label>
+            <select name="visualsation" id="_DDvisualisation">
+            </select>
+        </div>
+    </div>
+    <footer></footer>
 </body>
 
 </html>
