@@ -18,8 +18,11 @@ jobs:
       run: |
         # setup private key
         install -m 600 -D /dev/null ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.SERVER_IP }} > ~/.ssh/known_hosts
+        ssh-keyscan -H "$SERVER_IP" > ~/.ssh/known_hosts
         echo "$PRIVATE_KEY" > ~/.ssh/id_rsa 
 
+        # debug ssh
+        ssh -v "github@$SERVER_IP:/var/www/audio.lordmushroom.dev"
+
         # deploy our code
-        rsync -r app/ github@$SERVER_IP:/var/www/audio.lordmushroom.dev/ --delete
+        rsync -rv app/ "github@$SERVER_IP:/var/www/audio.lordmushroom.dev/" --delete
