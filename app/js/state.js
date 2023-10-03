@@ -1,10 +1,19 @@
 import { dispatchMap } from "./constants.js";
 // CANVAS
 export const canvas = document.querySelector("canvas");
+
+const view = document.getElementById("_content");
+canvas.width = view.clientWidth / 2;
+canvas.height = view.clientHeight;
+
 export const canvasContext = canvas.getContext("2d");
-export const canvasHeight = canvas.height;
-export const canvasWidth = canvas.width;
-canvasContext.clearRect(0, 0, canvasWidth, canvasHeight); // clear canvas
+
+export const ViewState = {
+    canvasHeight: canvas.height,
+    canvasWidth: canvas.width,
+};
+
+canvasContext.clearRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight); // clear canvas
 
 // AUDIO
 export const audioContext = new AudioContext();
