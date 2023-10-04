@@ -21,8 +21,5 @@ jobs:
         ssh-keyscan -H "$SERVER_IP" > ~/.ssh/known_hosts
         echo "$PRIVATE_KEY" > ~/.ssh/id_rsa 
 
-        # debug ssh
-        ssh -v "github@$SERVER_IP:/var/www/audio.lordmushroom.dev"
-
         # deploy our code
-        rsync -rv app/ "github@$SERVER_IP:/var/www/audio.lordmushroom.dev/" --delete
+        rsync -rv app/ github@$SERVER_IP:/var/www/audio.lordmushroom.dev/ --delete
