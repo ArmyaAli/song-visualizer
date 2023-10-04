@@ -65,11 +65,12 @@ muteButton?.addEventListener("click", async () => {
     audioState.audioMute = !audioState.audioMute;
 
     if (audioState.audioMute) {
-        muteButton.innerText = "unmute"
+        audioState.lastVolumeValue = audioGraph.gainNode.gain.value;
         audioGraph.gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        muteButton.innerText = "unmute"
     } else {
+        audioGraph.gainNode.gain.setValueAtTime(audioState.lastVolumeValue, audioContext.currentTime);
         muteButton.innerText = "mute"
-        audioGraph.gainNode.gain.setValueAtTime(1, audioContext.currentTime);
     }
 
 });

@@ -2,9 +2,6 @@ import { dispatchMap } from "./constants.js";
 // CANVAS
 export const canvas = document.querySelector("canvas");
 
-const view = document.getElementById("_content");
-canvas.width = view.clientWidth / 2;
-canvas.height = view.clientHeight;
 
 export const canvasContext = canvas.getContext("2d");
 
@@ -12,6 +9,15 @@ export const ViewState = {
     canvasHeight: canvas.height,
     canvasWidth: canvas.width,
 };
+
+const view = document.getElementById("_content");
+if (view.clientWidth <= 800) {
+    canvas.height = ViewState.canvasHeight = view.clientHeight / 2;
+    canvas.width = ViewState.canvasWidth = view.clientWidth - 8;
+} else {
+    canvas.width = ViewState.canvasWidth = view.clientWidth / 2;
+    canvas.height = ViewState.canvasHeight = view.clientHeight;
+}
 
 canvasContext.clearRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight); // clear canvas
 
@@ -25,11 +31,13 @@ export const audioGraph = {
     AnalyserNode: null
 };
 
-export const audioState = { 
-    bufferLength: null, 
-    dataArray: null, 
+export const audioState = {
+    bufferLength: null,
+    dataArray: null,
     audioPlaying: false,
-    audioMute: false
+    audioMute: false,
+    lastVolumeValue: 0.5 
+
 };
 
 // CONTROLS
@@ -40,9 +48,9 @@ export const volSlider = document.getElementById("_volSlider");
 
 export const visualisationDropdown = document.getElementById("_DDvisualisation");
 // populate
-for(const opt of Object.keys(dispatchMap)) visualisationDropdown.appendChild(new Option(opt, `_${opt}`));
+for (const opt of Object.keys(dispatchMap)) visualisationDropdown.appendChild(new Option(opt, `_${opt}`));
 
-export const Visualisation = { CURRENT_VISULIZATION:Object.keys(dispatchMap)[0] }
+export const Visualisation = { CURRENT_VISULIZATION: Object.keys(dispatchMap)[0] }
 
 export const m__FPS = {
     count: 0,
