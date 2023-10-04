@@ -33,7 +33,7 @@ export const drawCircles = () => {
     let x = 0;
     const r = 10;
     for (let i = 0; i < audioState.bufferLength; i++) {
-        let radius = audioState.dataArray[i];
+        let radius = audioState.dataArray[i] / 2;
         canvasContext.beginPath();
         canvasContext.fillStyle = `rgb(${radius + 100}, 50, 50)`;
         canvasContext.ellipse(x, 100, radius, radius, 0, 0, 2 * Math.PI)
