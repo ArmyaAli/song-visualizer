@@ -14,7 +14,7 @@ export const drawVerticalBars = () => {
 
     for (let i = 0; i < audioState.bufferLength; i++) {
         barHeight = audioState.dataArray[i];
-        canvasContext.fillStyle = `rgb(${barHeight + 100}, 50, 50)`;
+        canvasContext.fillStyle = `rgb(${barHeight + ViewState.color[0]}, ${ViewState.color[1]}, ${ViewState.color[2]})`;
         let y = ViewState.canvasHeight - barHeight / 2;
         canvasContext.fillRect(x, y, barWidth, barHeight);
         x += barWidth + 1;
@@ -35,7 +35,7 @@ export const drawCircles = () => {
     for (let i = 0; i < audioState.bufferLength; i++) {
         let radius = audioState.dataArray[i] / 2;
         canvasContext.beginPath();
-        canvasContext.fillStyle = `rgb(${radius + 100}, 50, 50)`;
+        canvasContext.fillStyle = `rgb(${radius + ViewState.color[0]}, ${ViewState.color[1]}, ${ViewState.color[2]})`;
         canvasContext.ellipse(x, 100, radius, radius, 0, 0, 2 * Math.PI)
         canvasContext.fill();
         canvasContext.stroke();
