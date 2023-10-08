@@ -58,5 +58,5 @@ export const m__FPS = {
     elapsed: 0,
     stop: false,
     interval: 1000 / 60,
-}
     then: performance.now()
+}
