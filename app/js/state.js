@@ -8,6 +8,7 @@ export const canvasContext = canvas.getContext("2d");
 export const ViewState = {
     canvasHeight: canvas.height,
     canvasWidth: canvas.width,
+    color: [100, 50, 50]
 };
 
 const view = document.getElementById("_content");
@@ -19,7 +20,6 @@ if (view.clientWidth <= 800) {
     canvas.height = ViewState.canvasHeight = view.clientHeight;
 }
 
-canvasContext.clearRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight); // clear canvas
 
 // AUDIO
 export const audioContext = new AudioContext();
@@ -37,7 +37,6 @@ export const audioState = {
     audioPlaying: false,
     audioMute: false,
     lastVolumeValue: 0.5 
-
 };
 
 // CONTROLS
@@ -45,6 +44,8 @@ export const htmlInput = document.querySelector("input");
 export const playButton = document.getElementById("_playBtn");
 export const muteButton = document.getElementById("_muteBtn");
 export const volSlider = document.getElementById("_volSlider");
+export const colorPicker = document.getElementById("_colorPicker");
+export const _rangeValueLabel = document.getElementById("_rangeValue");
 
 export const visualisationDropdown = document.getElementById("_DDvisualisation");
 // populate
@@ -57,5 +58,5 @@ export const m__FPS = {
     elapsed: 0,
     stop: false,
     interval: 1000 / 60,
-    then: performance.now()
 }
+    then: performance.now()
