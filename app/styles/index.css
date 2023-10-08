@@ -21,6 +21,14 @@ header, footer {
     height: 128px;
     background-color: green;
     margin: 0;
+    display: flex;
+    align-items: center;
+    color:white;
+}
+
+header > span {
+    margin-left: 16px;
+    font-size: 32px;
 }
 
 #_content {
