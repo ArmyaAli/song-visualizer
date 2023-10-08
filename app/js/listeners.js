@@ -1,7 +1,13 @@
-import { htmlInput, playButton, muteButton, volSlider, audioContext, audioElement, audioGraph, audioState, visualisationDropdown, Visualisation, canvas, ViewState } from './state.js'
+import { htmlInput, playButton, muteButton, volSlider, audioContext, audioElement, audioGraph, audioState, visualisationDropdown, Visualisation, canvas, ViewState, canvasContext, colorPicker, _rangeValueLabel } from './state.js'
+import { hexToRgb } from './util.js'
 import { loop } from './main.js'
 
 // GLOBAL
+window.addEventListener('load', () => {
+    canvasContext.fillRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight);
+    canvasContext.fillStyle = `rgb(255,255,255)`;
+})
+
 window.addEventListener('resize', () => {
     const view = document.getElementById("_content");
     if (view.clientWidth <= 800) {
@@ -12,6 +18,21 @@ window.addEventListener('resize', () => {
 
     canvas.width = ViewState.canvasWidth = view.clientWidth / 2;
     canvas.height = ViewState.canvasHeight = view.clientHeight;
+    canvasContext.fillRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight);
+    canvasContext.fillStyle = `rgb(255,255,255)`;
+});
+
+colorPicker.addEventListener('change', ($event) => {
+    const value = $event.target.value;
+    const rgb = hexToRgb(value);
+    console.log(rgb)
+    if(rgb) {
+        ViewState.color[0] = rgb.r;
+        ViewState.color[1] = rgb.g;
+        ViewState.color[2] = rgb.b;
+    } else {
+        console.error("Error reading color");
+    }
 });
 
 visualisationDropdown.addEventListener('change', () => Visualisation.CURRENT_VISULIZATION = visualisationDropdown.selectedOptions[0]?.text)
@@ -20,7 +41,7 @@ htmlInput?.addEventListener("change", (data) => {
     const audioSrc = URL.createObjectURL(blob);
     audioElement.src = audioSrc;
 
-    // Required as context will stat on in "Suspend state"
+    // Required as context will start on in "Suspend state"
     audioContext.resume();
 
     audioGraph.sourceNode = audioContext.createMediaElementSource(audioElement)
@@ -51,6 +72,7 @@ playButton?.addEventListener("click", async () => {
     } else {
         audioElement.pause();
         audioState.audioPlaying = false;
+        audioState.audioMute = false;
         playButton.innerText = "Play"
     }
 
@@ -84,4 +106,5 @@ volSlider?.addEventListener("input", async (e) => {
     // 0 <= volume <= 100 -> 0 <= volume <= 1
     const volume = e.target.value / 100;
     audioGraph.gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+    _rangeValueLabel.innerHTML = `Volume: ${e.target.value}%`
 });
