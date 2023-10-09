@@ -12,8 +12,6 @@ export const loop = () => {
     _DS_Fps.now = performance.now();
     _DS_Fps.elapsed = (_DS_Fps.now - _DS_Fps.then);
     
-    console.log(Visualisation.CURRENT_VISULIZATION);
-    console.log(_DS_Fps);
     if (_DS_Fps.elapsed > _DS_Fps.interval) {
         _DS_Fps.then = _DS_Fps.now - (_DS_Fps.elapsed % _DS_Fps.interval);
         _DS_DispatchMap[Visualisation.CURRENT_VISULIZATION](); 

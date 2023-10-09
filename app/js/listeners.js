@@ -26,7 +26,6 @@ window.addEventListener('resize', () => {
 colorPicker.addEventListener('change', ($event) => {
     const value = $event.target.value;
     const rgb = hexToRgb(value);
-    console.log(rgb)
     if(rgb) {
         ViewState.color[0] = rgb.r;
         ViewState.color[1] = rgb.g;
