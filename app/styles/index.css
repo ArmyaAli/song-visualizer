@@ -3,6 +3,7 @@ html, body {
     padding: 0;
     list-style: none;
     height: 100%;
+    width: 100%;
 }
 
 body {
@@ -38,7 +39,7 @@ header > span {
 }
 
 #_content > * {
-    align-self: start;
+    align-self: center;
     margin: 0 8px;
 }
 
@@ -49,16 +50,18 @@ header > span {
     flex-direction: column;
     justify-content: center;
     align-items: end;
+    padding: 8px;
 }
 
 #_controls > * {
     align-self: start;
-    margin: 4px 0;
+    margin: 8px 0;
 }
 
 
 @media only screen and (max-width: 800px) {
     #_content {
         flex-direction: column;
+        width: 100%;
     }
 }
