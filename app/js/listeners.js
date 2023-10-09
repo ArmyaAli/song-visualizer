@@ -22,6 +22,7 @@ window.addEventListener('resize', () => {
     canvasContext.fillStyle = `rgb(255,255,255)`;
 });
 
+// CONTROLS
 colorPicker.addEventListener('change', ($event) => {
     const value = $event.target.value;
     const rgb = hexToRgb(value);

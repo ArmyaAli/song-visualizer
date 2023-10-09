@@ -1,6 +1,5 @@
-import { audioState, Visualisation, m__FPS } from './state.js'
+import { audioState, Visualisation, _DS_Fps, _DS_DispatchMap } from './state.js'
 import './listeners.js'
-import { dispatchMap } from './constants.js';
 
 
 // Canvas loop
@@ -10,11 +9,13 @@ export const loop = () => {
 
     window.requestAnimationFrame(loop);
 
-    m__FPS.now = performance.now();
-    m__FPS.elapsed = (m__FPS.now - m__FPS.then);
+    _DS_Fps.now = performance.now();
+    _DS_Fps.elapsed = (_DS_Fps.now - _DS_Fps.then);
     
-    if (m__FPS.elapsed > m__FPS.interval) {
-        m__FPS.then = m__FPS.now - (m__FPS.elapsed % m__FPS.interval);
-        dispatchMap[Visualisation.CURRENT_VISULIZATION](); 
+    console.log(Visualisation.CURRENT_VISULIZATION);
+    console.log(_DS_Fps);
+    if (_DS_Fps.elapsed > _DS_Fps.interval) {
+        _DS_Fps.then = _DS_Fps.now - (_DS_Fps.elapsed % _DS_Fps.interval);
+        _DS_DispatchMap[Visualisation.CURRENT_VISULIZATION](); 
     }
 }

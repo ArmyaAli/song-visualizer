@@ -1,4 +1,4 @@
-import { canvasContext, ViewState, m__FPS } from "./state.js";
+import { canvasContext, ViewState, _DS_Fps } from "./state.js";
 import { audioGraph, audioState } from "./state.js";
 
 export const drawVerticalBars = () => {
@@ -11,7 +11,6 @@ export const drawVerticalBars = () => {
     const barWidth = (ViewState.canvasWidth / audioState.bufferLength) * 2.5;
     let barHeight;
     let x = 0;
-
     for (let i = 0; i < audioState.bufferLength; i++) {
         barHeight = audioState.dataArray[i];
         canvasContext.fillStyle = `rgb(${barHeight + ViewState.color[0]}, ${ViewState.color[1]}, ${ViewState.color[2]})`;
@@ -20,7 +19,7 @@ export const drawVerticalBars = () => {
         x += barWidth + 1;
     }
 
-    m__FPS.count++;
+    _DS_Fps.count++;
 }
 
 export const drawCircles = () => {
@@ -36,13 +35,13 @@ export const drawCircles = () => {
         let radius = audioState.dataArray[i] / 2;
         canvasContext.beginPath();
         canvasContext.fillStyle = `rgb(${radius + ViewState.color[0]}, ${ViewState.color[1]}, ${ViewState.color[2]})`;
-        canvasContext.ellipse(x, 100, radius, radius, 0, 0, 2 * Math.PI)
+        canvasContext.ellipse(x, ViewState.canvasHeight / 2, radius, radius, 0, 0, 2 * Math.PI)
         canvasContext.fill();
         canvasContext.stroke();
         x += 2 * r + 1;
     }
 
-    m__FPS.count++;
+    _DS_Fps.count++;
 
 }
 
