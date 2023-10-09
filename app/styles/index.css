@@ -36,6 +36,8 @@ header > span {
     display: flex;
     width: 100%;
     height: calc(100% - 256px);
+    scroll-behavior: smooth;
+    overflow-y: scroll;
 }
 
 #_content > * {
