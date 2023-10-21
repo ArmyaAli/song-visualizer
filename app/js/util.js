@@ -1,3 +1,4 @@
+import { canvasContext as ctx } from "./state.js";
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 export const rgbToHex = (r, g, b) => "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 export const hexToRgb = (hex) => {
@@ -13,4 +14,21 @@ export const hexToRgb = (hex) => {
     g: parseInt(result[2], 16),
     b: parseInt(result[3], 16)
   } : null;
+}
+
+// https://stackoverflow.com/questions/25837158/how-to-draw-a-star-by-using-canvas-html5
+export const strokeStar = (x, y, r, n, inset) => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.translate(x, y);
+    ctx.moveTo(0,0-r);
+    for (var i = 0; i < n; i++) {
+        ctx.rotate(Math.PI / n);
+        ctx.lineTo(0, 0 - (r*inset));
+        ctx.rotate(Math.PI / n);
+        ctx.lineTo(0, 0 - r);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
 }
