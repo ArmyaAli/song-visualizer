@@ -73,6 +73,10 @@ header > span {
 @media only screen and (max-width: 800px) {
     #_content {
         flex-direction: column;
+        height: calc(100% - 128px);
         width: 100%;
+    }
+    header, footer {  
+        height: 64px;
     }
 }
