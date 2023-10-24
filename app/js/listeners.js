@@ -1,6 +1,8 @@
-import { htmlInput, playButton, muteButton, volSlider, audioContext, audioElement, audioGraph, audioState, visualisationDropdown, Visualisation, canvas, ViewState, canvasContext, colorPicker, _rangeValueLabel } from './state.js'
+import { htmlInput, playButton, muteButton, volSlider, audioContext, audioElement, audioGraph, audioState, visualisationDropdown, Visualisation, canvas, ViewState, canvasContext, colorPicker, _rangeValueLabel, _DS_UploadMap } from './state.js'
 import { hexToRgb } from './util.js'
 import { loop } from './main.js'
+import { updateFileUploadLabel } from './jobs.js';
+import { errorPopup } from './errors.js';
 
 // GLOBAL
 window.addEventListener('load', () => {
@@ -26,7 +28,7 @@ window.addEventListener('resize', () => {
 colorPicker.addEventListener('change', ($event) => {
     const value = $event.target.value;
     const rgb = hexToRgb(value);
-    if(rgb) {
+    if (rgb) {
         ViewState.color[0] = rgb.r;
         ViewState.color[1] = rgb.g;
         ViewState.color[2] = rgb.b;
@@ -41,6 +43,16 @@ htmlInput?.addEventListener("change", (data) => {
     const audioSrc = URL.createObjectURL(blob);
     audioElement.src = audioSrc;
 
+    // If the file is not an audio file, we can't do much
+    if (!blob.type.includes("audio")) {
+        console.log("Error, please upload a music file");
+        errorPopup(0);
+        return;
+    }
+
+    // Set file data
+    audioState.fileSize = blob.size;
+    audioState.songName = blob.name;
     // Required as context will start on in "Suspend state"
     audioContext.resume();
 
@@ -58,11 +70,23 @@ htmlInput?.addEventListener("change", (data) => {
     audioGraph.sourceNode.connect(audioGraph.gainNode)
         .connect(audioGraph.analyserNode)
         .connect(audioContext.destination)
+
+    // Add to our uploadMap
+    _DS_UploadMap[blob.name] = audioSrc;
+    // Update label
+    updateFileUploadLabel(audioState.songName);
+    // Persist
+    localStorage.setItem(blob.name, audioSrc);
 });
 
 
 playButton?.addEventListener("click", async () => {
-    if (audioElement === null) return;
+    if (audioElement.src === null || audioElement.src === undefined || audioElement.src === "") {
+        console.error("No song uploaded.")
+        errorPopup(1);
+        return;
+    }
+
     if (!audioState.audioPlaying) {
         await audioElement.play();
         audioState.audioPlaying = true;
@@ -81,6 +105,7 @@ playButton?.addEventListener("click", async () => {
 muteButton?.addEventListener("click", async () => {
     if (audioGraph.gainNode === null) {
         console.error("No song uploaded.")
+        errorPopup(2);
         return;
     }
 
@@ -100,6 +125,7 @@ muteButton?.addEventListener("click", async () => {
 volSlider?.addEventListener("input", async (e) => {
     if (audioGraph.gainNode === null) {
         console.error("No song uploaded.")
+        errorPopup(3);
         return;
     }
 

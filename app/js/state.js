@@ -47,7 +47,9 @@ export const audioState = {
     dataArray: null,
     audioPlaying: false,
     audioMute: false,
-    lastVolumeValue: 0.5
+    lastVolumeValue: 0.5,
+    songName: null,
+    fileSize: -1,
 };
 
 export const ViewState = {
