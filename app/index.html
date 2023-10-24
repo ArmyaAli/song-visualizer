@@ -12,12 +12,35 @@
     <script defer src="lib/bootstrap/bootstrap.bundle.min.js"></script>
     <!-- Source -->
     <script defer type="module" src="js/main.js"></script>
+    <!-- Manifest-->
+    <link rel="manifest" href="manifest.json" />
 </head>
 
 <body>
     <header>
         <span id="_mainTitle">Audio Visualizer</span>
     </header>
+
+    <!-- Button trigger modal -->
+    <button type="button" id="_errorModalBtn" class="btn btn-primary" style="display: none;" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="_errorModalTitle"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="_errorModalMessage" ></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="_content">
         <div>
             <canvas #canvas width="1200" height="400"></canvas>
@@ -25,6 +48,7 @@
         <div id="_controls">
             <div>
                 <input class="form-control" type="file" id="formFile">
+                <label id="_songNameLabel" for="formFile" class="form-label">Please upload a song</label>
             </div>
             <div class="d-flex justify-content-center align-items-center mr-2">
                 <label for="_colorPicker" class="form-label">Color picker:</label>
