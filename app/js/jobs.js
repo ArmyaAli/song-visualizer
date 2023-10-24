@@ -2,6 +2,11 @@ import { canvasContext, ViewState, _DS_Fps, canvas } from "./state.js";
 import { audioGraph, audioState } from "./state.js";
 import { strokeStar } from "./util.js";
 
+export const updateFileUploadLabel = (name) => {
+    const label = document.querySelector("#_songNameLabel")
+    if(name !== "") label.innerHTML = `<b>You Uploaded: </b>${name}`;
+}
+
 export const drawVerticalBars = () => {
     canvasContext.clearRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight); // clear canvas
     audioGraph.analyserNode.getByteFrequencyData(audioState.dataArray);
@@ -69,12 +74,15 @@ export const drawHorizontalBars = () => {
 
 export const drawStars = () => {
     canvasContext.clearRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight); // clear canvas
+
     audioGraph.analyserNode.getByteFrequencyData(audioState.dataArray);
     canvasContext.fillStyle = `rgb(0,0,0)`;
     canvasContext.fillRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight);
     canvasContext.fillStyle = `rgb(255,255,255)`;
+    
     const height = ViewState.canvasHeight;
     const width = ViewState.canvasWidth;
+
     const cell = {
         x: width / 8,
         y: height / 8,
@@ -92,9 +100,10 @@ export const drawStars = () => {
     // division constant
     let di = 180;
 
+
+    // We set & reset these variables to model a 2d grid with cellsize <x / 8, y / 8>
     let rowCount = 0;
     let colCount = 0;
-
 
     for (let i = 0; i < audioState.bufferLength; i++) {
         radius += audioState.dataArray[i] / di;
@@ -102,7 +111,7 @@ export const drawStars = () => {
         strokeStar(x + cell.x * colCount, y + cell.y * rowCount, radius, vertices, inset);
         if (colCount * cell.x < width) colCount++;
         else {
-            if (rowCount * cell.y < height) {
+            if (rowCount * cell.y < height && rowCount < 8) {
                 rowCount++;
                 colCount = 0;
             }
@@ -112,5 +121,6 @@ export const drawStars = () => {
 
     _DS_Fps.count++;
 }
+
 // TO-IMP: 2023-10-02
 export const drawPD = () => { canvasContext.clearRect(0, 0, ViewState.canvasWidth, ViewState.canvasHeight); }
